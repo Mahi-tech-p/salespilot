@@ -15,7 +15,7 @@ public class OrganizationPersistenceService {
         this.organizationRepository = organizationRepository;
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     public Organization create(String name , String slug){
 
         Organization organization = new Organization();
