@@ -1,6 +1,9 @@
 package com.salespilot.auth.controller;
 
 
+import com.salespilot.auth.dto.LoginRequest;
+import com.salespilot.auth.dto.LoginResponse;
+import com.salespilot.auth.service.AuthenticationService;
 import com.salespilot.user.dto.RegisterUserRequest;
 import com.salespilot.user.dto.UserResponse;
 import com.salespilot.user.service.UserService;
@@ -17,9 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private  final UserService userService;
+    private  final AuthenticationService authenticationService;
 
-    public AuthController(UserService userService){
+    public AuthController(UserService userService, AuthenticationService authenticationService){
         this.userService = userService;
+        this.authenticationService = authenticationService;
     }
 
     @PostMapping("/register")
@@ -28,5 +33,10 @@ public class AuthController {
         UserResponse response = userService.register(registerUserRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request){
+        return ResponseEntity.ok(authenticationService.login(request));
     }
 }
