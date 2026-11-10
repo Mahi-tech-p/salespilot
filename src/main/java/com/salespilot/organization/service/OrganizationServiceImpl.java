@@ -26,7 +26,8 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public OrganizationResponse createOrganization(
-            CreateOrganizationRequest request
+            CreateOrganizationRequest request,
+            UUID authenticatedUserId
     ) {
 
         String name = request.name()
@@ -43,7 +44,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
             try {
                 Organization saved =
-                        persistenceService.create(name, slug);
+                        persistenceService.create(name, slug , authenticatedUserId);
 
                 return toResponse(saved);
 

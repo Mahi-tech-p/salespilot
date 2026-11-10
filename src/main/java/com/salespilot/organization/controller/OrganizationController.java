@@ -7,10 +7,14 @@ import com.salespilot.organization.service.OrganizationService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("api/v1/organizations")
@@ -24,9 +28,11 @@ public class OrganizationController {
 
 
     @PostMapping
-    public ResponseEntity<OrganizationResponse> createOrganization(@Valid @RequestBody CreateOrganizationRequest createOrganizationRequest){
-
-        OrganizationResponse response = organizationService.createOrganization(createOrganizationRequest);
+    public ResponseEntity<OrganizationResponse> createOrganization(@Valid @RequestBody CreateOrganizationRequest createOrganizationRequest,
+                                                                   @AuthenticationPrincipal Jwt jwt
+                                                                   ){
+        UUID userId = UUID.fromString(jwt.getSubject());
+        OrganizationResponse response = organizationService.createOrganization(createOrganizationRequest ,userId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
